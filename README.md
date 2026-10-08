@@ -1,20 +1,43 @@
 <div align="center">
 
-# MYLS
+# 🗂️ MYLS
 
-### Trình liệt kê tập tin UNIX viết bằng ngôn ngữ C
+### UNIX File Listing Utility · System Programming Midterm
 
-**Dự án giữa kỳ · Lập trình hệ thống UNIX · NetBSD**
+**Trình mô phỏng lệnh `ls` bằng C trên NetBSD**
 
-`C11` · `POSIX` · `NetBSD` · `BSD make` · `VirtualBox` · `WinSCP`
+[![Language](https://img.shields.io/badge/Language-C11-00599C?style=for-the-badge&logo=c&logoColor=white)](https://en.cppreference.com/w/c)
+[![Platform](https://img.shields.io/badge/Platform-NetBSD-EAB92D?style=for-the-badge&logo=netbsd&logoColor=black)](https://www.netbsd.org/)
+[![Standard](https://img.shields.io/badge/API-POSIX-38618C?style=for-the-badge)](https://pubs.opengroup.org/onlinepubs/9799919799/)
+[![Build](https://img.shields.io/badge/Build-BSD%20Make-238636?style=for-the-badge)](https://man.netbsd.org/make.1)
+
+![Editor](https://img.shields.io/badge/Editor-VS%20Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)
+![Virtualization](https://img.shields.io/badge/VM-VirtualBox-183A61?style=flat-square&logo=virtualbox&logoColor=white)
+![File transfer](https://img.shields.io/badge/Transfer-WinSCP-1874CD?style=flat-square)
+![Options](https://img.shields.io/badge/Supported%20options-19-orange?style=flat-square)
+
+**[📚 Tài liệu](#-tổng-quan) · [⚙️ Cài đặt](#️-biên-dịch-trên-netbsd) · [🚀 Sử dụng](#-hướng-dẫn-sử-dụng) · [🧪 Kiểm thử](#-kiểm-thử)**
+
+<sub>Dự án giữa kỳ · Lập trình hệ thống UNIX · Mã sinh viên: 24IT015</sub>
 
 </div>
 
 ---
 
-## 1. Tổng quan
+## 🧭 Mục lục
 
-**MYLS** là chương trình dòng lệnh mô phỏng một phần chức năng của `ls(1)` trên UNIX, được phát triển **từ đầu bằng ngôn ngữ C**. Dự án tập trung vào việc thao tác trực tiếp với hệ thống tập tin thông qua các API như `opendir()`, `readdir()`, `lstat()`, `stat()` và `readlink()`; **không gọi lệnh `ls` có sẵn** để tạo kết quả.
+| | | |
+|---|---|---|
+| [📖 Tổng quan](#-tổng-quan) | [✨ Tính năng](#-tính-năng) | [🧰 Công nghệ](#-công-nghệ--môi-trường) |
+| [📁 Cấu trúc](#-cấu-trúc-dự-án) | [🔌 Kết nối NetBSD](#-kết-nối-windows--netbsd) | [⚙️ Biên dịch](#️-biên-dịch-trên-netbsd) |
+| [🚀 Cách sử dụng](#-hướng-dẫn-sử-dụng) | [🧪 Kiểm thử](#-kiểm-thử) | [🔄 Quy trình](#-quy-trình-phát-triển) |
+| [🛠️ Xử lý sự cố](#️-xử-lý-sự-cố) | [🔗 Kho mã nguồn](#-kho-mã-nguồn) | |
+
+---
+
+## 📖 Tổng quan
+
+**MYLS** là chương trình dòng lệnh mô phỏng một phần chức năng của `ls` trên UNIX, được phát triển **từ đầu bằng ngôn ngữ C**. Dự án tập trung vào việc thao tác trực tiếp với hệ thống tập tin thông qua các API như `opendir()`, `readdir()`, `lstat()`, `stat()` và `readlink()`; **không gọi lệnh `ls` có sẵn** để tạo kết quả.
 
 Mã nguồn được chia thành nhiều mô-đun, có Makefile để biên dịch, bộ kiểm thử tự động và báo cáo dự án. Phạm vi chức năng dựa trên **tài liệu `ls(1)` NetBSD 10.1 được giảng viên cung cấp**; dự án không nhằm triển khai toàn bộ GNU `ls`.
 
@@ -32,7 +55,7 @@ Mã nguồn được chia thành nhiều mô-đun, có Makefile để biên dị
 
 > **Trạng thái kiểm thử:** Mã đã được biên dịch và kiểm thử cơ bản trên Linux trong quá trình tạo dự án. Người sử dụng cần chạy `make` và `make test` trên NetBSD thực tế, đồng thời đối chiếu với `ls` gốc trước khi nộp bài. `make` thành công chỉ xác nhận việc biên dịch, không đảm bảo mọi hành vi đều chính xác.
 
-## 2. Tính năng
+## ✨ Tính năng
 
 Mã nguồn bao gồm xử lý cho **19 tùy chọn** trong tài liệu:
 
@@ -60,7 +83,7 @@ Mã nguồn bao gồm xử lý cho **19 tùy chọn** trong tài liệu:
 
 Các tùy chọn có thể kết hợp, chẳng hạn `-la`, `-ltr`, `-Rla`. Chương trình có xử lý những nhóm tùy chọn mà lựa chọn phía sau ghi đè lựa chọn phía trước, như `-d/-R`, `-l/-n`, `-c/-u` và `-q/-w`.
 
-## 3. Công nghệ và môi trường
+## 🧰 Công nghệ & môi trường
 
 | Thành phần | Vai trò |
 |---|---|
@@ -71,7 +94,7 @@ Các tùy chọn có thể kết hợp, chẳng hạn `-la`, `-ltr`, `-Rla`. Ch�
 | **BSD `make`** | Tự động biên dịch và thực hiện kiểm thử. |
 | **POSIX / C11** | API và chuẩn ngôn ngữ dùng trong dự án. |
 
-### Yêu cầu trước khi bắt đầu
+### ✅ Yêu cầu trước khi bắt đầu
 
 1. NetBSD đã được cài và khởi động thành công trong VirtualBox.
 2. Có tài khoản người dùng thông thường trên NetBSD và biết mật khẩu.
@@ -89,7 +112,7 @@ command -v make
 
 Nếu `cc` không được tìm thấy, cần cài bộ công cụ phát triển tương ứng với bản NetBSD đang dùng (ví dụ bộ **comp**). Nếu `make` không có, kiểm tra lại bản cài đặt NetBSD.
 
-## 4. Cấu trúc dự án
+## 📁 Cấu trúc dự án
 
 ```text
 unix-ls/
@@ -105,16 +128,18 @@ unix-ls/
 ├── tests/
 │   └── test.sh          # Bộ kiểm thử tự động
 ├── Makefile             # Biên dịch / kiểm thử / dọn dẹp
-└── README.md            # Hướng dẫn sử dụng
+├── .gitignore           # Loại trừ binary và object files
+├── .gitattributes       # Giữ định dạng LF khi dùng Git
+└── README.md            # Hướng dẫn sử dụng và báo cáo
 ```
 
 Khi chạy `make`, thư mục dự án sẽ có thêm chương trình thực thi `myls` và các file `.o`. Đây là sản phẩm biên dịch, không phải mã nguồn cần sửa trực tiếp.
 
-## 5. Thiết lập truyền file từ Windows vào NetBSD
+## 🔌 Kết nối Windows ↔ NetBSD
 
 Có thể bỏ qua mục này nếu **WinSCP của bạn đã kết nối thành công** tới máy ảo NetBSD.
 
-### 5.1. Cấu hình mạng VirtualBox (ví dụ dùng NAT)
+### 5.1 · 🌐 Cấu hình NAT trong VirtualBox
 
 Tắt máy ảo trước khi điều chỉnh cấu hình. Trong VirtualBox, chọn máy ảo NetBSD → **Settings → Network → Adapter 1**:
 
@@ -134,7 +159,7 @@ Tắt máy ảo trước khi điều chỉnh cấu hình. Trong VirtualBox, ch�
 
 Cổng `2222` chỉ là ví dụ, có thể thay nếu cổng đã bị sử dụng. Nếu bạn đang dùng **Bridged Adapter** và kết nối trực tiếp qua IP của NetBSD, hãy dùng địa chỉ IP và cổng SSH thực tế thay cho `127.0.0.1:2222`.
 
-### 5.2. Bật SSH trên NetBSD
+### 5.2 · 🔐 Bật SSH trên NetBSD
 
 Đăng nhập NetBSD và chuyển quyền quản trị:
 
@@ -168,7 +193,7 @@ exit
 
 **An toàn:** Sử dụng tài khoản người dùng bình thường để truyền file và thực hiện dự án; không cần bật đăng nhập SSH bằng root.
 
-### 5.3. Kết nối bằng WinSCP
+### 5.3 · 📤 Kết nối bằng WinSCP
 
 Mở WinSCP → **New Site** và điền:
 
@@ -182,7 +207,7 @@ Mở WinSCP → **New Site** và điền:
 
 Nhấn **Login**. Lần đầu kết nối, kiểm tra fingerprint máy chủ trước khi chấp nhận. Sau khi đăng nhập, giao diện WinSCP sẽ hiển thị file Windows ở một bên và file NetBSD ở bên còn lại.
 
-### 5.4. Chuyển dự án vào máy ảo
+### 5.4 · 📦 Chuyển dự án vào máy ảo
 
 1. Giải nén file ZIP của dự án trên Windows.
 2. Trong VS Code, mở thư mục `unix-ls` để xem hoặc chỉnh sửa code.
@@ -192,7 +217,7 @@ Nhấn **Login**. Lần đầu kết nối, kiểm tra fingerprint máy chủ tr
 
 > **Tránh lỗi thư mục lồng nhau:** Đường dẫn đúng phải là `~/unix-ls/Makefile`, không phải `~/unix-ls/unix-ls/Makefile`. Không nên chuyển riêng từng file `.c` mà bỏ quên `include/`, `Makefile` hay `tests/`.
 
-## 6. Biên dịch trên NetBSD
+## ⚙️ Biên dịch trên NetBSD
 
 Tại Terminal NetBSD, đăng nhập bằng tài khoản đã nhận source và chạy:
 
@@ -226,17 +251,17 @@ Các lệnh Makefile:
 
 Không cần sử dụng `gcc` riêng lẻ vì Makefile đã quản lý việc biên dịch tất cả các module.
 
-## 7. Hướng dẫn sử dụng
+## 🚀 Hướng dẫn sử dụng
 
 Tất cả ví dụ dưới đây thực hiện từ thư mục `~/unix-ls` trong Terminal NetBSD.
 
-### 7.1. Liệt kê nội dung thư mục hiện tại
+### 7.1 · Liệt kê thư mục hiện tại
 
 ```sh
 ./myls
 ```
 
-### 7.2. Liệt kê một đường dẫn cụ thể
+### 7.2 · Liệt kê một đường dẫn cụ thể
 
 ```sh
 ./myls /etc
@@ -244,14 +269,14 @@ Tất cả ví dụ dưới đây thực hiện từ thư mục `~/unix-ls` tron
 ./myls src/main.c
 ```
 
-### 7.3. Hiển thị file ẩn
+### 7.3 · Hiển thị tập tin ẩn
 
 ```sh
 ./myls -a .     # Bao gồm . và ..
 ./myls -A .     # Bỏ qua . và ..
 ```
 
-### 7.4. Hiển thị thông tin chi tiết
+### 7.4 · Hiển thị thông tin chi tiết
 
 ```sh
 ./myls -l .
@@ -262,7 +287,7 @@ Tất cả ví dụ dưới đây thực hiện từ thư mục `~/unix-ls` tron
 
 Chế độ `-l` hiển thị các trường như loại và quyền tập tin, số liên kết, chủ sở hữu, nhóm, kích thước, thời gian và tên; với symbolic link có thể kèm `->` và đích liên kết.
 
-### 7.5. Sắp xếp và duyệt đệ quy
+### 7.5 · Sắp xếp và duyệt đệ quy
 
 ```sh
 ./myls -S .       # Kích thước giảm dần
@@ -275,7 +300,7 @@ Chế độ `-l` hiển thị các trường như loại và quyền tập tin, 
 
 Cẩn thận với `-R` trên thư mục rất lớn, vì lượng kết quả có thể nhiều.
 
-### 7.6. In inode, block và phân loại tập tin
+### 7.6 · In inode, block và phân loại tập tin
 
 ```sh
 ./myls -i .
@@ -286,7 +311,7 @@ Cẩn thận với `-R` trên thư mục rất lớn, vì lượng kết quả c
 ./myls -lF /etc
 ```
 
-### 7.7. Nhiều đường dẫn và tên bắt đầu bằng dấu `-`
+### 7.7 · Nhiều đường dẫn và tên bắt đầu bằng dấu `-`
 
 ```sh
 ./myls /etc /tmp
@@ -295,9 +320,9 @@ Cẩn thận với `-R` trên thư mục rất lớn, vì lượng kết quả c
 
 `--` đánh dấu kết thúc danh sách tùy chọn: các đối số phía sau được hiểu là đường dẫn.
 
-## 8. Kiểm thử
+## 🧪 Kiểm thử
 
-### 8.1. Kiểm thử tự động
+### 8.1 · Kiểm thử tự động
 
 ```sh
 cd ~/unix-ls
@@ -312,7 +337,7 @@ PASS: myls smoke tests
 
 Đây là **smoke test**, không phải bằng chứng rằng mọi tổ hợp của 19 tùy chọn đều đã được kiểm thử đầy đủ. Nếu test thất bại, xem dòng lỗi trong Terminal và kiểm tra lại code, môi trường, khác biệt giữa BSD và GNU utilities.
 
-### 8.2. So sánh với `ls` của NetBSD
+### 8.2 · So sánh với `ls` của NetBSD
 
 Chương trình này mặc định in **mỗi tập tin một dòng** theo tài liệu được giao. Khi so sánh bản mặc định, lệnh `ls` gốc có thể hiển thị nhiều cột tùy môi trường; để tránh so sánh sai do định dạng terminal, hãy dùng cùng một kiểu đầu ra có thể đối chiếu, chẳng hạn khi ghi ra file:
 
@@ -324,7 +349,7 @@ diff -u /tmp/ls-original.txt /tmp/ls-myls.txt
 
 Nếu `diff` không in gì, **hai file đầu ra giống nhau** trong trường hợp đang kiểm tra. Lặp lại phép so sánh với thư mục thử nghiệm nhỏ và các tùy chọn khác. Với `-l`, `-s`, `-h`, cần xem cả quy tắc định dạng và đơn vị block, không chỉ so sánh chuỗi máy móc.
 
-### 8.3. Kiểm thử thủ công các trường hợp lỗi
+### 8.3 · Kiểm thử các trường hợp lỗi
 
 ```sh
 ./myls /duong-dan-khong-ton-tai
@@ -341,7 +366,7 @@ echo $?
 
 Ngoài ra nên kiểm thử thư mục rỗng, file tên có khoảng trắng, liên kết tượng trưng bị hỏng và thư mục không có quyền truy cập.
 
-## 9. Quy trình phát triển với VS Code và WinSCP
+## 🔄 Quy trình phát triển
 
 Mỗi lần thay đổi mã nguồn:
 
@@ -353,7 +378,7 @@ Mỗi lần thay đổi mã nguồn:
 
 **Không chỉnh sửa file `.o` hoặc chương trình `myls` bằng tay.** Các file này được tạo tự động từ mã nguồn.
 
-## 10. Xử lý sự cố thường gặp
+## 🛠️ Xử lý sự cố
 
 | Hiện tượng | Nguyên nhân có thể | Hướng xử lý |
 |---|---|---|
@@ -369,10 +394,17 @@ Mỗi lần thay đổi mã nguồn:
 
 ---
 
+## 🔗 Kho mã nguồn
+
+**GitHub:** [LeSyBach/LESYBACH_24IT015_midterm](https://github.com/LeSyBach/LESYBACH_24IT015_midterm)
+
+>
 <div align="center">
 
-**MYLS — UNIX System Programming Midterm Project**
+---
 
-*Viết mã trên VS Code · Truyền qua WinSCP · Biên dịch và chạy trên NetBSD*
+**🗂️ MYLS · UNIX System Programming Midterm**
+
+<sub>Written in C · Built with BSD Make · Run on NetBSD · Built with BSD Make</sub>
 
 </div>
