@@ -104,9 +104,6 @@ unix-ls/
 │   └── display.c        # Định dạng và in thông tin tập tin
 ├── tests/
 │   └── test.sh          # Bộ kiểm thử tự động
-├── docs/
-│   ├── BaoCao.md        # Báo cáo dạng Markdown
-│   └── BaoCao.pdf       # Báo cáo PDF
 ├── Makefile             # Biên dịch / kiểm thử / dọn dẹp
 └── README.md            # Hướng dẫn sử dụng
 ```
@@ -369,27 +366,6 @@ Mỗi lần thay đổi mã nguồn:
 | `Permission denied` | Không có quyền đọc đường dẫn hoặc chạy file | Kiểm tra quyền tập tin bằng `ls -l`; không tự ý dùng root. |
 | `make test` thất bại | Lỗi hành vi hoặc khác biệt công cụ môi trường | Xem lỗi đầu tiên, đối chiếu bằng test đơn lẻ và `ls` gốc. |
 | Sửa code mà kết quả không đổi | Chưa tải file mới lên máy ảo | Kiểm tra WinSCP đã ghi đè đúng file trong `~/unix-ls/src/`. |
-
-## 11. Giới hạn hiện tại
-
-Đây là phiên bản phục vụ bài tập giữa kỳ, không thay thế hoàn toàn `ls` tiêu chuẩn. Những điểm cần lưu ý hoặc kiểm chứng thêm:
-
-- Việc căn chỉnh cột và định dạng kích thước/thời gian trong `-l` có thể khác `ls(1)` chính thức.
-- `-q` xử lý byte không in được theo cách đơn giản, chưa bảo đảm đúng mọi trường hợp UTF-8 đa byte.
-- Biến môi trường `BLOCKSIZE` chỉ được xử lý theo một tập cú pháp giới hạn.
-- Khi mục thư mục biến mất giữa lúc đọc tên và lấy thông tin, chương trình báo lỗi và có thể bỏ qua mục đó.
-- Đệ quy `-R` không có giới hạn độ sâu cố định; cây thư mục rất sâu có thể tiêu tốn nhiều stack.
-- Chưa có kết quả kiểm chứng toàn diện các tổ hợp tùy chọn trên NetBSD trong tài liệu đi kèm.
-
-Các giới hạn này cần được đánh giá với tiêu chí chấm điểm của giảng viên trước khi tuyên bố đã tương thích hoàn toàn.
-
-## 12. Tài liệu và báo cáo
-
-- `docs/BaoCao.pdf`: báo cáo dự án để đọc hoặc in.
-- `docs/BaoCao.md`: bản nội dung báo cáo có thể chỉnh sửa.
-- **Tài liệu tham chiếu:** `ls(1)` — *NetBSD General Commands Manual*, NetBSD 10.1, ngày 27/10/2024 (PDF do giảng viên cung cấp).
-
-Trước khi nộp, nên bổ sung thông tin sinh viên/nhóm, ảnh chụp Terminal NetBSD khi chạy `make`, `make test`, `./myls -la`, và ghi lại các trường hợp đã được kiểm chứng thực tế.
 
 ---
 
