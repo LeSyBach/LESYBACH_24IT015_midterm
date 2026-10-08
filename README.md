@@ -16,7 +16,7 @@
 ![File transfer](https://img.shields.io/badge/Transfer-WinSCP-1874CD?style=flat-square)
 ![Options](https://img.shields.io/badge/Supported%20options-19-orange?style=flat-square)
 
-**[📚 Tài liệu](#-tổng-quan) · [⚙️ Cài đặt](#️-biên-dịch-trên-netbsd) · [🚀 Sử dụng](#-hướng-dẫn-sử-dụng) · [🧪 Kiểm thử](#-kiểm-thử)**
+**[📚 Tài liệu](#-tổng-quan) · [⚙️ Biên dịch](#️-biên-dịch-trên-netbsd) · [📥 Cài lệnh](#-cài-đặt-tùy-chọn-chạy-myls-không-cần-) · [🚀 Sử dụng](#-hướng-dẫn-sử-dụng) · [🧪 Kiểm thử](#-kiểm-thử)**
 
 <sub>Dự án giữa kỳ · Lập trình hệ thống UNIX · Mã sinh viên: 24IT015</sub>
 
@@ -31,7 +31,7 @@
 | [📖 Tổng quan](#-tổng-quan) | [✨ Tính năng](#-tính-năng) | [🧰 Công nghệ](#-công-nghệ--môi-trường) |
 | [📁 Cấu trúc](#-cấu-trúc-dự-án) | [🔌 Kết nối NetBSD](#-kết-nối-windows--netbsd) | [⚙️ Biên dịch](#️-biên-dịch-trên-netbsd) |
 | [🚀 Cách sử dụng](#-hướng-dẫn-sử-dụng) | [🧪 Kiểm thử](#-kiểm-thử) | [🔄 Quy trình](#-quy-trình-phát-triển) |
-| [🛠️ Xử lý sự cố](#️-xử-lý-sự-cố) | [🔗 Kho mã nguồn](#-kho-mã-nguồn) | |
+| [📥 Cài lệnh `myls`](#-cài-đặt-tùy-chọn-chạy-myls-không-cần-) | [🛠️ Xử lý sự cố](#️-xử-lý-sự-cố) | [🔗 Kho mã nguồn](#-kho-mã-nguồn) |
 
 ---
 
@@ -248,12 +248,107 @@ Các lệnh Makefile:
 | `make test` | Chạy bộ kiểm thử tự động trong `tests/test.sh`. |
 | `make clean` | Xóa `myls` và các file `.o` đã biên dịch. |
 | `make clean && make` | Biên dịch sạch lại từ đầu. |
+| `make install` | Biên dịch nếu cần và cài `myls` vào `/usr/local/bin` (cần quyền ghi). |
+| `make uninstall` | Gỡ bản `myls` đã cài khỏi `/usr/local/bin` (cần quyền ghi). |
 
 Không cần sử dụng `gcc` riêng lẻ vì Makefile đã quản lý việc biên dịch tất cả các module.
 
+## 📥 Cài đặt tùy chọn: chạy `myls` không cần `./`
+
+> **Không bắt buộc.** Để làm và kiểm thử bài giữa kỳ, chỉ cần `make` rồi chạy `./myls`. Phần này dành cho người muốn sử dụng `myls` như một lệnh thông thường từ mọi thư mục. Chỉ thực hiện nếu Makefile của phiên bản dự án đã có hai mục tiêu `install` và `uninstall`.
+
+### 📌 Cài vào `/usr/local/bin`
+
+Sau khi tải mã nguồn về NetBSD, đăng nhập bằng tài khoản thường (ví dụ `bach`) rồi chạy:
+
+```sh
+cd ~/unix-ls
+make test
+su
+make install
+exit
+```
+
+- Lệnh `su` yêu cầu **mật khẩu root** nhưng giữ nguyên thư mục hiện tại khi chuyển quyền trong cách dùng thông thường; xác nhận đang ở thư mục dự án bằng `pwd` nếu cần.
+- `make install` tự gọi bước biên dịch nếu chương trình chưa được tạo hoặc mã nguồn mới hơn; không nhất thiết phải chạy `make` riêng.
+- Lệnh này sao chép chương trình sang `/usr/local/bin/myls`, **không thay thế** `/bin/ls` của NetBSD.
+- Cần quyền root vì tài khoản thường có thể gặp lỗi `install: /usr/local: mkdir: Permission denied`.
+
+Kiểm tra kết quả:
+
+```sh
+ls -l /usr/local/bin/myls
+/usr/local/bin/myls -la
+command -v myls
+```
+
+Nếu `command -v myls` trả về `/usr/local/bin/myls` thì có thể chạy trực tiếp:
+
+```sh
+myls
+myls -la
+myls -R /tmp
+```
+
+### 🧭 Nếu đã cài nhưng `myls: command not found`
+
+Nguyên nhân thường là `/usr/local/bin` chưa có trong `PATH`. Kiểm tra:
+
+```sh
+echo "$PATH"
+```
+
+Với **Bash** (ví dụ dấu nhắc `bach@...$`), thêm tạm thời cho phiên hiện tại:
+
+```sh
+export PATH="/usr/local/bin:$PATH"
+```
+
+Muốn áp dụng lâu dài cho Bash của tài khoản hiện tại:
+
+```sh
+printf '%s\n' 'export PATH="/usr/local/bin:$PATH"' >> ~/.bashrc
+. ~/.bashrc
+```
+
+Với **csh/tcsh**, dùng cú pháp khác:
+
+```csh
+set path = ( /usr/local/bin $path )
+rehash
+```
+
+Để thiết lập lâu dài cho csh/tcsh, chỉnh file `~/.cshrc` tương ứng. **Không thêm dấu `./` vào PATH và không đổi tên bản `myls` thành `ls`.**
+
+### ♻️ Cập nhật hoặc gỡ cài đặt
+
+Sau khi sửa code, biên dịch và kiểm thử lại; sau đó cài lại phiên bản mới:
+
+```sh
+cd ~/unix-ls
+make
+make test
+su
+make install
+exit
+```
+
+Nếu không muốn dùng lệnh `myls` đã cài nữa:
+
+```sh
+cd ~/unix-ls
+su
+make uninstall
+exit
+```
+
+Lệnh gỡ cài đặt chỉ xóa `/usr/local/bin/myls` theo Makefile, **không xóa source code** và không ảnh hưởng lệnh `ls` gốc.
+
+---
+
 ## 🚀 Hướng dẫn sử dụng
 
-Tất cả ví dụ dưới đây thực hiện từ thư mục `~/unix-ls` trong Terminal NetBSD.
+Các ví dụ dưới đây dùng `./myls` để có thể chạy ngay sau khi `make` trong thư mục `~/unix-ls`. Nếu đã thực hiện phần **cài đặt tùy chọn** và `PATH` được cấu hình đúng, bạn có thể thay `./myls` bằng `myls` ở tất cả ví dụ.
 
 ### 7.1 · Liệt kê thư mục hiện tại
 
@@ -388,7 +483,9 @@ Mỗi lần thay đổi mã nguồn:
 | `cc: not found` | Thiếu trình biên dịch | Kiểm tra `command -v cc`, cài bộ công cụ phát triển phù hợp. |
 | `don't know how to make ...` | Sai thư mục hoặc mục tiêu Makefile | Chạy `pwd`, `ls -l Makefile`, kiểm tra tên target. |
 | `./myls: not found` | Chưa biên dịch hoặc đứng sai thư mục | Vào `~/unix-ls`, chạy `make`, kiểm tra `ls -l myls`. |
-| `Permission denied` | Không có quyền đọc đường dẫn hoặc chạy file | Kiểm tra quyền tập tin bằng `ls -l`; không tự ý dùng root. |
+| `Permission denied` khi liệt kê | Không có quyền đọc đường dẫn hoặc chạy file | Kiểm tra quyền tập tin bằng `ls -l`; không tự ý dùng root để đọc dữ liệu. |
+| `make install` báo `mkdir: Permission denied` | Không có quyền ghi vào `/usr/local/bin` | Chuyển sang root bằng `su`, rồi chạy `make install` trong thư mục dự án. |
+| `myls: command not found` sau khi cài | `/usr/local/bin` không có trong `PATH` | Kiểm tra `command -v myls`; thêm `/usr/local/bin` vào `PATH` như hướng dẫn ở trên. |
 | `make test` thất bại | Lỗi hành vi hoặc khác biệt công cụ môi trường | Xem lỗi đầu tiên, đối chiếu bằng test đơn lẻ và `ls` gốc. |
 | Sửa code mà kết quả không đổi | Chưa tải file mới lên máy ảo | Kiểm tra WinSCP đã ghi đè đúng file trong `~/unix-ls/src/`. |
 
@@ -398,13 +495,12 @@ Mỗi lần thay đổi mã nguồn:
 
 **GitHub:** [LeSyBach/LESYBACH_24IT015_midterm](https://github.com/LeSyBach/LESYBACH_24IT015_midterm)
 
->
 <div align="center">
 
 ---
 
 **🗂️ MYLS · UNIX System Programming Midterm**
 
-<sub>Written in C · Built with BSD Make · Run on NetBSD · Built with BSD Make</sub>
+<sub>Written in C · Built with BSD Make · Runs on NetBSD</sub>
 
 </div>
