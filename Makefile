@@ -17,3 +17,16 @@ clean:
 
 test: ${TARGET}
 	sh tests/test.sh
+
+# Installation configuration
+PREFIX?=/usr/local
+BINDIR=${PREFIX}/bin
+
+# Install MYLS as a system command
+install: ${TARGET}
+	install -d ${DESTDIR}${BINDIR}
+	install -m 755 ${TARGET} ${DESTDIR}${BINDIR}/myls
+
+# Remove installed MYLS
+uninstall:
+	rm -f ${DESTDIR}${BINDIR}/myls
